@@ -53,7 +53,7 @@ func (ctx DataContext) addRecord(data string){
 	adminCode := words[7]
 	countryCode := words[8]
 	value := fmt.Sprintf("%s:%s:%s", geonameid,name,countryCode)
-	if adminCode == "PPL" {
+	if strings.HasPrefix(adminCode, "PPL") {
 		ctx.redisCtx.GeoAdd(latitude, longitude, value)
 		ctx.count += 1
 	}
