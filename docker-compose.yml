@@ -1,0 +1,10 @@
+version: "3.9" 
+services:
+  web:
+    image: "go-geo:latest"
+    ports:
+      - "8080:8080"
+    command: 
+      - "/go/bin/app"
+  redis:
+    image: "redis:alpine"
