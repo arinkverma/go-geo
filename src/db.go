@@ -12,6 +12,18 @@ type RedisContext struct{
 	pool *redis.Pool
 }
 
+func(ctx RedisContext) WaitForRedis() {
+	conn := ctx.Get()
+	defer conn.Close()
+	for true {
+		_, err := conn.Do("PING")
+		if err == nil {
+			break
+		}
+		log.Println("Can't connect to the Redis database, Retrying...")
+	}
+}
+
 func (ctx RedisContext) Get () redis.Conn{
 	return ctx.pool.Get()
 }

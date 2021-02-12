@@ -9,6 +9,7 @@ import (
 func main() {
 	fmt.Println("Starting geo micro-service")
 	redisCtx := makeRedisPool()
+	redisCtx.WaitForRedis()
 	dataCtx := DataContext{
 		redisCtx: redisCtx,
 	}
