@@ -3,7 +3,8 @@ package main
 import (
 	"os"
 	"log"
-
+	"strings"
+	"fmt"
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -24,16 +25,18 @@ func (ctx RedisContext) GeoAdd (latitude string, longitude string, value string)
 	}
 }
 
-func (ctx RedisContext) GeoRadius (latitude string, longitude string) string{
+func (ctx RedisContext) GeoRadius (latitude string, longitude string, countryCode string) string{
 	conn := ctx.Get()
 	defer conn.Close()
 	log.Printf("latitude %s, longitude %s", latitude, longitude)
-	value, err := redis.Strings(conn.Do("GEORADIUS", "idx:cities", longitude, latitude, 1000, "km", "ASC"))
+	values, err := redis.Strings(conn.Do("GEORADIUS", "idx:cities", longitude, latitude, 1000, "km", "ASC"))
 	if err != nil{
 		log.Fatal(err)
 	}
-	if (len(value) > 0){
-		return value[0]
+	for _, record := range values {
+		if strings.HasSuffix(record, fmt.Sprintf(":%s", strings.ToUpper(countryCode))) {
+			return record
+		}
 	}
 	return ""
 }

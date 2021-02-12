@@ -20,7 +20,7 @@ func main() {
 
 	r := gin.Default()
 	r.GET("/ping", serviceCtx.Ping)
-	r.GET("/resolve/:latlon", serviceCtx.ResolveLatLon)
+	r.GET("/resolve/:countryCode/:latlon", serviceCtx.ResolveLatLon)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
 

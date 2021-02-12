@@ -27,8 +27,9 @@ func (ctx ServiceContext) Ping(c *gin.Context) {
 
 func (ctx ServiceContext) ResolveLatLon(c *gin.Context) {
 	latlon := c.Param("latlon")
+	countryCode := c.Param("countryCode")
 	cordinates := strings.Split(latlon, ",")
-	value := ctx.redisCtx.GeoRadius(cordinates[0], cordinates[1])
+	value := ctx.redisCtx.GeoRadius(cordinates[0], cordinates[1], countryCode)
 	resp := gin.H{}
 	if (value != ""){
 		data := strings.Split(value, ":")
