@@ -12,6 +12,7 @@ const CityFile = "cities15000.txt"
 
 type DataContext struct{
 	redisCtx *RedisContext
+	count int32
 }
 
 func (ctx DataContext) InitData(){
@@ -30,13 +31,12 @@ func (ctx DataContext) InitData(){
 	}
 	log.Printf("Purged existing data")
 
-	count := 0
 	scanner := bufio.NewScanner(file)
     for scanner.Scan() {
-    	count += 1
     	ctx.addRecord(scanner.Text())
+    	ctx.count += 1
     }
-    log.Printf("Total %d records have been updated.", count)
+    log.Printf("Total %d records have been updated.", ctx.count)
 
     if err := scanner.Err(); err != nil {
         log.Fatal(err)
@@ -50,7 +50,11 @@ func (ctx DataContext) addRecord(data string){
 	name := words[1]
 	latitude := words[4]
 	longitude := words[5]
+	adminCode := words[7]
 	countryCode := words[8]
 	value := fmt.Sprintf("%s:%s:%s", geonameid,name,countryCode)
-	ctx.redisCtx.GeoAdd(latitude, longitude, value)
+	if adminCode == "PPL" {
+		ctx.redisCtx.GeoAdd(latitude, longitude, value)
+		ctx.count += 1
+	}
 }
