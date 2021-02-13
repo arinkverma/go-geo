@@ -34,7 +34,6 @@ func (self RedisContext) Ping () (string, error){
 func (self RedisContext) GeoRadius (countryCode string, latitude string, longitude string) (string, error){
 	conn := self.Get()
 	defer conn.Close()
-	log.Printf("GeoRadius: [countryCode:%s, latitude %s, longitude %s]", countryCode, latitude, longitude)
 	values, err := redis.Strings(conn.Do("GEORADIUS", CITY_KEY, longitude, latitude, 1000, "km", "ASC"))
 	if err != nil{
 		return "", err
