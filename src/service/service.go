@@ -1,6 +1,7 @@
 package service
 
 import(
+	"fmt"
 	"strings"
 	"net/http"
 	"github.com/gin-gonic/gin"
@@ -19,25 +20,26 @@ func (self ServiceContext) Ping(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": fmt.Sprint(err),
 		})
 	}
 }
 
 func (self ServiceContext) ResolveLatLon(c *gin.Context) {
 	latlon := c.Param("latlon")
-	countryCode := c.Param("countryCode")
+	countryCode := strings.ToUpper(c.Param("countryCode"))
 	cordinates := strings.Split(latlon, ",")
 	value, err := self.redisCtx.GeoRadius(countryCode, cordinates[0], cordinates[1])
 	if err == nil {
+		data := strings.Split(value, ":")
 		c.JSON(http.StatusOK, gin.H{
-			"id": value[0],
-			"city": value[1],
-			"country": value[2],
+			"id": data[0],
+			"city": data[1],
+			"country": data[2],
 		})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": fmt.Sprint(err),
 		})
 	}
 }

@@ -11,7 +11,7 @@ COPY ./tmp/cities15000.txt .
 #RUN go get -d -v ./...
 RUN go install -v ./...
 RUN chmod +x /go/bin/go-geo
-CMD ["/go/bin/go-geo"]
+
 EXPOSE 8080:8080
 
-#CMD ["/bin/sh"]
+CMD ["/go/bin/go-geo"]

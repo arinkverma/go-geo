@@ -1,10 +1,9 @@
 package db
 
 import (
-	"os"
 	"log"
-	"strings"
 	"fmt"
+	"strings"
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -37,14 +36,15 @@ func (self RedisContext) GeoRadius (countryCode string, latitude string, longitu
 	defer conn.Close()
 	log.Printf("GeoRadius: [countryCode:%s, latitude %s, longitude %s]", countryCode, latitude, longitude)
 	values, err := redis.Strings(conn.Do("GEORADIUS", CITY_KEY, longitude, latitude, 1000, "km", "ASC"))
-	value := ""
+	if err != nil{
+		return "", err
+	}
 	for _, record := range values {
-		if strings.HasSuffix(record, fmt.Sprintf(":%s", strings.ToUpper(countryCode))) {
-			value = record
-			break
+		if strings.HasSuffix(record, fmt.Sprintf(":%s", countryCode)) {
+			return record, err
 		}
 	}
-	return value, err
+	return "", fmt.Errorf("Can't find any city within 1000km and country %s", countryCode)
 }
 
 func(self RedisContext) waitForRedis() {
@@ -67,8 +67,7 @@ func MakeRedisContext() *RedisContext{
 		Dial: func() (redis.Conn, error) {
 			conn, err := redis.Dial("tcp", "redis:6379")
 			if err != nil {
-				log.Printf("ERROR: fail init redis: %s", err.Error())
-				os.Exit(1)
+				log.Fatal("ERROR: fail init redis: %s", err.Error())
 			}
 			return conn, err
 		},
