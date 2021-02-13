@@ -67,20 +67,18 @@ The source is based on **GeoNames**. The GeoNames geographical database covers a
 * Time complexity: O(log(N)) for each item added, where N is the number of elements in the sorted set.
 * There are limits to the coordinates that can be indexed: areas very near to the poles are not indexable.
 * Example: 
-```redis> GEOADD Sicily 13.361389 38.115556 "Palermo" 15.087269 37.502669 "Catania"
+```
+redis> GEOADD Sicily 13.361389 38.115556 "Palermo" 15.087269 37.502669 "Catania"
 (integer) 2
 ```
 
 ### GEORADIUS
 * Time complexity: O(N+log(M)) where N is the number of elements inside the bounding box of the circular area delimited by center and radius and M is the number of items inside the index.
 * Example:
-```redis> GEOADD Sicily 13.361389 38.115556 "Palermo" 15.087269 37.502669 "Catania"
-(integer) 2
-redis> GEORADIUS Sicily 15 37 200 km WITHDIST
-1) 1) "Palermo"
-   2) "190.4424"
-2) 1) "Catania"
-   2) "56.4413"
+```
+redis> GEORADIUS Sicily 15 37 200 km
+1) "Palermo"
+2) "Catania"
 ```
 
 ## Performance on local VM with 2core
@@ -104,7 +102,7 @@ Transfer rate:          57.67 [Kbytes/sec] received
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.6      0       4
-Processing:    11  142  15.5    143     173
+Processing:    11  142  1re    143     173
 Waiting:        8  141  15.5    141     173
 Total:         11  142  15.3    143     174
 
