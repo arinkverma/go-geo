@@ -1,6 +1,7 @@
 # go-geo
-Golang and redis based, high-performance, light weight micro-service to resolve location cordinates into cities. The source is based on **GeoNames**.
+Golang and redis based, high-performance, light weight micro-service to resolve location coordinates into cities. The source is based on **GeoNames**.
 
+![Structure flow](https://github.com/arinkverma/go-geo/raw/main/high-perf-geo-service.png)
 
 ## Installation
 ```
