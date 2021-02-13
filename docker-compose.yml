@@ -5,6 +5,6 @@ services:
     ports:
       - "8080:8080"
     command: 
-      - "/go/bin/app"
+      - "/go/bin/go-geo"
   redis:
     image: "redis:alpine"
